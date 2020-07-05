@@ -830,7 +830,7 @@ function postImageWidth(post_link,token) {
                      tagnot= unshortenedUrl.replace(/@/g, '').concat('?tag='+ListflagData.post_tag);
                       }
                     }
-                   example(tagnot.replace(/&demoyou/g, '').replace(/?demoyou/g, '?').replace(/%25/g,'%'));
+                   example(tagnot.replace(/&demoyou/g, '').replace(/%25/g,'%'));
                         async function example(dddd) {
                           let response =await bitly.shorten(dddd);
                         final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
@@ -944,7 +944,7 @@ function postImageWidth(post_link,token) {
                       tagnot= unshortenedUrl.replace(/@/g, '').concat('?tag='+ListflagData.post_tag);
                        }
                     }
-                   example(tagnot.replace(/&demoyou/g, '').replace(/?demoyou/g, '?').replace(/%25/g,'%'));
+                   example(tagnot.replace(/&demoyou/g, '').replace(/%25/g,'%'));
                           async function example(dddd) {
                             let response =await bitly.shorten(dddd);
                           final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
