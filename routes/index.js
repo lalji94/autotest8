@@ -812,12 +812,12 @@ function postImageWidth(post_link,token) {
                         finalLink[h] = 'demoyou'
                       }else if(finalLink[h].match(/^ascsub/g)){
                         finalLink[h] = 'demoyou'
-                      }else if(finalLink[h].match(/^linkCode/g)){
-                        finalLink[h] = 'demoyou'
-                      }else if(finalLink[h].match(/^linkId/g)){
-                        finalLink[h] = 'demoyou'
-                      }else if(finalLink[h].match(/^qid/g)){
-                        finalLink[h] = 'demoyou'
+//                       }else if(finalLink[h].match(/^linkCode/g)){
+//                         finalLink[h] = 'demoyou'
+//                       }else if(finalLink[h].match(/^linkId/g)){
+//                         finalLink[h] = 'demoyou'
+//                       }else if(finalLink[h].match(/^qid/g)){
+//                         finalLink[h] = 'demoyou'
                       }else if(finalLink[h].match(/^tag/g)){
                         finalLink[h] = 'tag='+ListflagData.post_tag
                       }
@@ -926,12 +926,12 @@ function postImageWidth(post_link,token) {
                         finalLink[h] = 'demoyou'
                       }else if(finalLink[h].match(/^ascsub/g)){
                         finalLink[h] = 'demoyou'
-                      }else if(finalLink[h].match(/^linkCode/g)){
-                        finalLink[h] = 'demoyou'
-                      }else if(finalLink[h].match(/^linkId/g)){
-                        finalLink[h] = 'demoyou'
-                      }else if(finalLink[h].match(/^qid/g)){
-                        finalLink[h] = 'demoyou'
+//                       }else if(finalLink[h].match(/^linkCode/g)){
+//                         finalLink[h] = 'demoyou'
+//                       }else if(finalLink[h].match(/^linkId/g)){
+//                         finalLink[h] = 'demoyou'
+//                       }else if(finalLink[h].match(/^qid/g)){
+//                         finalLink[h] = 'demoyou'
                       }else if(finalLink[h].match(/^tag/g)){
                         finalLink[h] = 'tag='+ListflagData.post_tag
                       }
