@@ -508,7 +508,7 @@ router.post('/editihdpostFlags', function (req, res) {
   });
 }); 
 
-function postImageWidth(post_link,token) {
+function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegroup) {
   axios(post_link)
   // axios('https://www.amazon.in/dp/B07DJD1RTM')
       .then(response => {
@@ -530,20 +530,47 @@ function postImageWidth(post_link,token) {
           console.log('siteTitle: ', siteTitle);
           var avilabilty = $('#availability').find('span').text().trim();
           console.log('avilabilty: ', avilabilty);
-
+          let sqlss = "INSERT INTO post_telegram (post_id,data) VALUES (" + storeId + ",'demo')";
+          connection.query(sqlss, function (err, rides) {
+            if (err) {
+            console.log('err: ', err);
+            }else{
           if(siteheadidsdng && siteheading && sitestrckprice && sitestrckpricessds && savepercent ){
-            telePost(token,siteheadidsdng,siteheading,sitestrckprice,sitestrckpricessds,savepercent,post_link,avilabilty)
-            telePostgujarat(token,siteheadidsdng,siteheading,sitestrckprice,sitestrckpricessds,savepercent,post_link,avilabilty)
-            console.log("===i");
-         } else if(siteheadidsdng && siteheading && sitestrckpricessds && avilabilty ){
-            console.log("===i");
-            telePosted(token,siteheadidsdng,siteheading,sitestrckpricessds,post_link,avilabilty)
-            telePostedgujarat(token,siteheadidsdng,siteheading,sitestrckpricessds,post_link,avilabilty)
-        }else{
-            console.log("no---");
+              telePost(token,siteheadidsdng,siteheading,sitestrckprice,sitestrckpricessds,savepercent,post_link,avilabilty)
+              telePostgujarat(token,siteheadidsdng,siteheading,sitestrckprice,sitestrckpricessds,savepercent,post_link,avilabilty)
+              for (let l = 0; l < telegroup.length; l++) {
+                teleAutoPostChannel(finalAmznData,telegroup[l].groupname,amzn_data);
+            }
+            } else if(siteheadidsdng && siteheading && sitestrckpricessds && avilabilty ){
+              telePosted(token,siteheadidsdng,siteheading,sitestrckpricessds,post_link,avilabilty)
+              telePostedgujarat(token,siteheadidsdng,siteheading,sitestrckpricessds,post_link,avilabilty)
+              for (let l = 0; l < telegroup.length; l++) {
+                teleAutoPostChannel(finalAmznData,telegroup[l].groupname,amzn_data);
+            }
+            }else{
+            for (let l = 0; l < telegroup.length; l++) {
+                teleAutoPostChannel(finalAmznData,telegroup[l].groupname,amzn_data);
+            }
+            teleAutoPostChannel(finalAmznData,"@bestshoppingdl",token);
+            teleAutoPostChannel(finalAmznData,"@bestshoppingdeal00",token);
           }
+        }
       })
-      .catch(console.error);
+    })
+      .catch(err =>{ 
+        let sqlss = "INSERT INTO post_telegram (post_id,data) VALUES (" + storeId + ",'demo')";
+        connection.query(sqlss, function (err, rides) {
+          if (err) {
+          console.log('err: ', err);
+          }else{
+        for (let l = 0; l < telegroup.length; l++) {
+          teleAutoPostChannel(finalAmznData,telegroup[l].groupname,amzn_data);
+        }
+        teleAutoPostChannel(finalAmznData,"@bestshoppingdl",token);
+        teleAutoPostChannel(finalAmznData,"@bestshoppingdeal00",token);
+      }
+    })
+      });
     }
 
     function telePost (token,post_img,post_title,post_regularPrice,post_sellPrice,savepercent,post_link,avilabilty) {
@@ -761,7 +788,7 @@ function postImageWidth(post_link,token) {
           setup();
           }
           let ListflagData = flagData[0];
-        let sqls = "SELECT post_id FROM post_telegram1 ORDER BY id DESC LIMIT 1";
+        let sqls = "SELECT post_id FROM post_telegram ORDER BY id DESC LIMIT 1";
         connection.query(sqls, function (err, rides) {
           if (err) {
             console.log('err: ', err);
@@ -770,37 +797,43 @@ function postImageWidth(post_link,token) {
           for (let i = 0; i < lastInsertId - rides[0].post_id; i++) {
             let nextId = rides[0].post_id + i + 1;
             let userExists = lastArrayData.filter(user => user.id == nextId);
-            // if (userExists.length > 0) {
               if (userExists.length > 0 && userExists[0].text_data != 'null\n') {
              let final =[];
              let array = userExists[0].text_data.split("\n");
+             if(userExists[0].text_data.match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g)){ 
+             let array_length = userExists[0].text_data.match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g).length;
               for (let j = 0; j < array.length; j++) {
-                if(array[j].match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,!&\/\/=]+)/g)){
+                if(array[j].match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g)){
                   let xzhxzh;
                     if(array[j].match(/amazon.in/g)){
                      xzhxzh = array[j].replace(/[[\]]/g,'').replace(/ /g, '@')
                     }else{
                     xzhxzh = array[j]
                     }
-                  let urls = xzhxzh.match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,!&\/\/=]+)/g)
-                  unshort(urls[0]).then(function(unshortenedUrls){ 
-                    let unshortenedUrl = unshortenedUrls.unshorten.replace(/&amp;/g,'&');
+                  let urls = xzhxzh.match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g)
+                    //  tall(urls[0], {
+                    //   method: 'HEAD',
+                    //   maxRedirect: 5
+                    // }).then(function(unshortenedUrls){ 
+                    //   let unshortenedUrl = unshortenedUrls.replace(/&amp;/g,'&');
+                      unshort(urls[0]).then(function(unshortenedUrls){ 
+                        let unshortenedUrl = unshortenedUrls.unshorten.replace(/&amp;/g,'&');
                       console.log('unshortenedUrlsssssss: ', unshortenedUrl);
                     if(unshortenedUrl.match(/amazon.in/g)){
                       let tagnot;
                       if(unshortenedUrl.match(/earnkaro/g)){
                         let finalLink =unshortenedUrl.split('dl=');
                          if(urlencode(finalLink[1]).match(/[?]/g)){
-                          tagnot= urlencode(finalLink[1]).concat('&tag='+ListflagData.post_tag);
+                          tagnot= urlencode(finalLink[1]).concat('&tag='+ListflagData.org_post_tag);
                         }else{
-                          tagnot= urlencode(finalLink[1]).concat('?tag='+ListflagData.post_tag);
+                          tagnot= urlencode(finalLink[1]).concat('?tag='+ListflagData.org_post_tag);
                         }
                       }else if(unshortenedUrl.match(/paisawapas/g)){
                           let finalLink =unshortenedUrl.split('url=');
                            if(urlencode(finalLink[1]).match(/[?]/g)){
-                            tagnot= urlencode(finalLink[1]).concat('&tag='+ListflagData.post_tag);
+                            tagnot= urlencode(finalLink[1]).concat('&tag='+ListflagData.org_post_tag);
                           }else{
-                            tagnot= urlencode(finalLink[1]).concat('?tag='+ListflagData.post_tag);
+                            tagnot= urlencode(finalLink[1]).concat('?tag='+ListflagData.org_post_tag);
                           }
                         } else if(unshortenedUrl.match(/tag/g)){
                     let finalLink =unshortenedUrl.split('&');
@@ -808,7 +841,7 @@ function postImageWidth(post_link,token) {
                       if(finalLink[h].match(/[?]/g)){
                         if(finalLink[h].match(/tag/g)){
                           let finalLinkssd =finalLink[h].split('?');
-                          finalLink[h] = finalLinkssd[0].concat('?tag='+ListflagData.post_tag)
+                          finalLink[h] = finalLinkssd[0].concat('?tag='+ListflagData.org_post_tag)
                         }
                       }else if(finalLink[h].match(/^ascsubtag/g)){
                         finalLink[h] = 'demoyou'
@@ -816,35 +849,32 @@ function postImageWidth(post_link,token) {
                         finalLink[h] = 'demoyou'
                       }else if(finalLink[h].match(/^ascsub/g)){
                         finalLink[h] = 'demoyou'
-//                       }else if(finalLink[h].match(/^linkCode/g)){
-//                         finalLink[h] = 'demoyou'
-//                       }else if(finalLink[h].match(/^linkId/g)){
-//                         finalLink[h] = 'demoyou'
-//                       }else if(finalLink[h].match(/^qid/g)){
-//                         finalLink[h] = 'demoyou'
                       }else if(finalLink[h].match(/^tag/g)){
-                        finalLink[h] = 'tag='+ListflagData.post_tag
+                        finalLink[h] = 'tag='+ListflagData.org_post_tag
                       }
                     }
                      tagnot= finalLink.join('&').replace(/@/g, '');
                     }else{
                       if(unshortenedUrl.match(/[?]/g)){
-                     tagnot= unshortenedUrl.replace(/@/g, '').concat('&tag='+ListflagData.post_tag);
+                     tagnot= unshortenedUrl.replace(/@/g, '').concat('&tag='+ListflagData.org_post_tag);
                       }else{
-                     tagnot= unshortenedUrl.replace(/@/g, '').concat('?tag='+ListflagData.post_tag);
+                     tagnot= unshortenedUrl.replace(/@/g, '').concat('?tag='+ListflagData.org_post_tag);
                       }
                     }
                    example(tagnot.replace(/&demoyou/g, '').replace(/%25/g,'%'));
                         async function example(dddd) {
                           let response =await bitly.shorten(dddd);
                         final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
-                         postImageWidth(response.link,ListflagData.bestshopping_token); 
+                        //  postImageWidth(response.link,ListflagData.bestshopping_token);
                       }
-                    }else if(unshortenedUrl.match(/puma.com/g) ||unshortenedUrl.match(/unacademy.com/g) ||unshortenedUrl.match(/coolwinks.com/g) ||unshortenedUrl.match(/orra.co.in/g) ||unshortenedUrl.match(/360totalsecurity.com/g) ||unshortenedUrl.match(/maxbupa.com/g) ||unshortenedUrl.match(/religarehealthinsurance.com/g) ||unshortenedUrl.match(/fnp.com/g) ||unshortenedUrl.match(/healthxp.in/g) ||unshortenedUrl.match(/bigrock.in/g) ||unshortenedUrl.match(/igp.com/g) ||unshortenedUrl.match(/letyshops.com/g) ||unshortenedUrl.match(/spartanpoker.com/g) ||unshortenedUrl.match(/adda52.com/g) ||unshortenedUrl.match(/balaji/g) ||unshortenedUrl.match(/eduonix.com/g) ||unshortenedUrl.match(/paytmmall.com/g) ||unshortenedUrl.match(/testbook.com/g) ||unshortenedUrl.match(/mamaearth.in/g) ||unshortenedUrl.match(/wonderchef.com/g) ||unshortenedUrl.match(/zee5/g) ||unshortenedUrl.match(/beardo.in/g) ||unshortenedUrl.match(/oneplus.in/g) ||unshortenedUrl.match(/1mg.com/g) ||unshortenedUrl.match(/udemy.com/g) ||unshortenedUrl.match(/hometown.in/g) ||unshortenedUrl.match(/magzter.com/g) ||unshortenedUrl.match(/asics.com/g) ||unshortenedUrl.match(/asics.com/g) ||unshortenedUrl.match(/ajio.com/g) ||unshortenedUrl.match(/timesprime.com/g)||unshortenedUrl.match(/themomsco.com/g) ||unshortenedUrl.match(/akbartravels.com/g) ||unshortenedUrl.match(/aliexpress.com/g) ||unshortenedUrl.match(/banggood.in/g) ||unshortenedUrl.match(/bata.in/g) ||unshortenedUrl.match(/behrouzbiryani.com/g) ||unshortenedUrl.match(/biba.in/g) ||unshortenedUrl.match(/bigbasket.com/g) ||unshortenedUrl.match(/brandfactoryonline.com/g) ||unshortenedUrl.match(/chumbak.com/g) ||unshortenedUrl.match(/cleartrip.com/g) ||unshortenedUrl.match(/clovia.com/g) ||unshortenedUrl.match(/croma.com/g) ||unshortenedUrl.match(/decathlon.in/g) ||unshortenedUrl.match(/dominos.co.in/g) ||unshortenedUrl.match(/etihad.com/g) ||unshortenedUrl.match(/faasos.io/g) ||unshortenedUrl.match(/fabhotels.com/g) ||unshortenedUrl.match(/firstcry.com/g) ||unshortenedUrl.match(/fossil.com/g) ||unshortenedUrl.match(/harmanaudio.in/g) ||unshortenedUrl.match(/hungama.com/g) ||unshortenedUrl.match(/insider.in/g) ||unshortenedUrl.match(/jockeyindia.com/g) ||unshortenedUrl.match(/kalkifashion.com/g) ||unshortenedUrl.match(/lenskart.com/g) ||unshortenedUrl.match(/lifestylestores.com/g) ||unshortenedUrl.match(/limeroad.com/g) ||unshortenedUrl.match(/manyavar.com/g) ||unshortenedUrl.match(/mcdonaldsindia.com/g) ||unshortenedUrl.match(/medlife.com/g) ||unshortenedUrl.match(/microsoft.com/g) ||unshortenedUrl.match(/mivi.in/g) ||unshortenedUrl.match(/makemytrip.com/g) ||unshortenedUrl.match(/myntra.com/g) ||unshortenedUrl.match(/nnnow.com/g) ||unshortenedUrl.match(/nykaafashion.com/g) ||unshortenedUrl.match(/oyorooms.com/g) ||unshortenedUrl.match(/pepperfry.com/g) ||unshortenedUrl.match(/pizzahut.co.in/g) ||unshortenedUrl.match(/puma.com/g) ||unshortenedUrl.match(/qatarairways.com/g) ||unshortenedUrl.match(/rentomojo.com/g) ||unshortenedUrl.match(/samsung.com/g) ||unshortenedUrl.match(/singaporeair.com/g) ||unshortenedUrl.match(/sochstore.com/g) ||unshortenedUrl.match(/tanishq.co.in/g) ||unshortenedUrl.match(/themancompany.com/g) ||unshortenedUrl.match(/zivame.com/g) ||unshortenedUrl.match(/zoomcar.com/g) ){
+                  
+						  }else if(unshortenedUrl.match(/puma.com/g) ||unshortenedUrl.match(/unacademy.com/g) ||unshortenedUrl.match(/coolwinks.com/g) ||unshortenedUrl.match(/orra.co.in/g) ||unshortenedUrl.match(/360totalsecurity.com/g) ||unshortenedUrl.match(/maxbupa.com/g) ||unshortenedUrl.match(/religarehealthinsurance.com/g) ||unshortenedUrl.match(/fnp.com/g) ||unshortenedUrl.match(/healthxp.in/g) ||unshortenedUrl.match(/bigrock.in/g) ||unshortenedUrl.match(/igp.com/g) ||unshortenedUrl.match(/letyshops.com/g) ||unshortenedUrl.match(/spartanpoker.com/g) ||unshortenedUrl.match(/adda52.com/g) ||unshortenedUrl.match(/balaji/g) ||unshortenedUrl.match(/eduonix.com/g) ||unshortenedUrl.match(/paytmmall.com/g) ||unshortenedUrl.match(/testbook.com/g) ||unshortenedUrl.match(/mamaearth.in/g) ||unshortenedUrl.match(/wonderchef.com/g) ||unshortenedUrl.match(/zee5/g) ||unshortenedUrl.match(/beardo.in/g) ||unshortenedUrl.match(/oneplus.in/g) ||unshortenedUrl.match(/1mg.com/g) ||unshortenedUrl.match(/udemy.com/g) ||unshortenedUrl.match(/hometown.in/g) ||unshortenedUrl.match(/magzter.com/g) ||unshortenedUrl.match(/asics.com/g) ||unshortenedUrl.match(/asics.com/g) ||unshortenedUrl.match(/ajio.com/g) ||unshortenedUrl.match(/timesprime.com/g)||unshortenedUrl.match(/themomsco.com/g) ||unshortenedUrl.match(/akbartravels.com/g) ||unshortenedUrl.match(/aliexpress.com/g) ||unshortenedUrl.match(/banggood.in/g) ||unshortenedUrl.match(/bata.in/g) ||unshortenedUrl.match(/behrouzbiryani.com/g) ||unshortenedUrl.match(/biba.in/g) ||unshortenedUrl.match(/bigbasket.com/g) ||unshortenedUrl.match(/brandfactoryonline.com/g) ||unshortenedUrl.match(/chumbak.com/g) ||unshortenedUrl.match(/cleartrip.com/g) ||unshortenedUrl.match(/clovia.com/g) ||unshortenedUrl.match(/croma.com/g) ||unshortenedUrl.match(/decathlon.in/g) ||unshortenedUrl.match(/dominos.co.in/g) ||unshortenedUrl.match(/etihad.com/g) ||unshortenedUrl.match(/faasos.io/g) ||unshortenedUrl.match(/fabhotels.com/g) ||unshortenedUrl.match(/firstcry.com/g) ||unshortenedUrl.match(/fossil.com/g) ||unshortenedUrl.match(/harmanaudio.in/g) ||unshortenedUrl.match(/hungama.com/g) ||unshortenedUrl.match(/insider.in/g) ||unshortenedUrl.match(/jockeyindia.com/g) ||unshortenedUrl.match(/kalkifashion.com/g) ||unshortenedUrl.match(/lenskart.com/g) ||unshortenedUrl.match(/lifestylestores.com/g) ||unshortenedUrl.match(/limeroad.com/g) ||unshortenedUrl.match(/manyavar.com/g) ||unshortenedUrl.match(/mcdonaldsindia.com/g) ||unshortenedUrl.match(/medlife.com/g) ||unshortenedUrl.match(/microsoft.com/g) ||unshortenedUrl.match(/mivi.in/g) ||unshortenedUrl.match(/makemytrip.com/g) ||unshortenedUrl.match(/myntra.com/g) ||unshortenedUrl.match(/nnnow.com/g) ||unshortenedUrl.match(/nykaafashion.com/g) ||unshortenedUrl.match(/oyorooms.com/g) ||unshortenedUrl.match(/pepperfry.com/g) ||unshortenedUrl.match(/pizzahut.co.in/g) ||unshortenedUrl.match(/puma.com/g) ||unshortenedUrl.match(/qatarairways.com/g) ||unshortenedUrl.match(/rentomojo.com/g) ||unshortenedUrl.match(/samsung.com/g) ||unshortenedUrl.match(/singaporeair.com/g) ||unshortenedUrl.match(/sochstore.com/g) ||unshortenedUrl.match(/tanishq.co.in/g) ||unshortenedUrl.match(/themancompany.com/g) ||unshortenedUrl.match(/zivame.com/g) ||unshortenedUrl.match(/zoomcar.com/g) ){
+                   
                       let sqlssnet = "SELECT * FROM diff_net_posts WHERE active_flag ='TRUE'";
                       connection.query(sqlssnet, function (err, flagsData) {
                         if (err) {
                           console.log('err: ', err);
+                        setup();
                         }
                         let ListflagDatass = flagsData;
                       let tagnot;
@@ -854,9 +884,9 @@ function postImageWidth(post_link,token) {
                         let finalLink =unshortenedUrl.split('dl=');
                         quelink = finalLink[1];
                       for (let k = 0; k < ListflagDatass.length; k++) {
-                        if(urlencode(quelink).match(ListflagDatass[k].domain_url)){
-//                           tagnot= ListflagDatass[k].Landing_Page.concat("?subid="+ListflagData.admitad_post_tag+"&ulp=").concat(urlencode(quelink));
-                         tagnot= ListflagDatass[k].Landing_Page.concat("?subid="+ListflagData.admitad_post_tag+"&ulp=").concat(urldecode(finalLink[1]));
+                        if(urlencode(finalLink[1]).match(ListflagDatass[k].domain_url)){
+                          // tagnot= ListflagDatass[k].Landing_Page.concat("?subid="+ListflagData.admitad_post_tag+"&ulp=").concat(urlencode(finalLink[1]));
+                          tagnot= ListflagDatass[k].Landing_Page.concat("?subid="+ListflagData.admitad_post_tag+"&ulp=").concat(urldecode(finalLink[1]));
                         }
                       }
                     // }else{
@@ -872,109 +902,101 @@ function postImageWidth(post_link,token) {
                         quelink = unshortenedUrl;
                         for (let t = 0; t < ListflagDatass.length; t++) {
                           if(urlencode(unshortenedUrl).match(ListflagDatass[t].domain_url)){
-//                             tagnot= ListflagDatass[t].Landing_Page.concat("?subid="+ListflagData.admitad_post_tag+"&ulp=").concat(urlencode(unshortenedUrl));
+                            // tagnot= ListflagDatass[t].Landing_Page.concat("?subid="+ListflagData.admitad_post_tag+"&ulp=").concat(urlencode(unshortenedUrl));
                             tagnot= ListflagDatass[t].Landing_Page.concat("?subid="+ListflagData.admitad_post_tag+"&ulp=").concat(urldecode(unshortenedUrl));
                           }
                         }
                       }
                       if(tagnot != undefined){
                       example(tagnot.replace(/%25/g,'%'));
-                      // }else{
-                      //   if(urlencode(quelink).match(/flipkart.com/g)){
-                      //     console.log('quelink: ', quelink);
-                      //     let finalLink =urlencode(quelink).split('&');
-                      //     console.log('finalLink: ', finalLink);
-                      //     for (let h = 0; h < finalLink.length; h++) {
-                      //       if(finalLink[h].match(/^affid/g)){
-                      //         finalLink[h] = 'demoyou'
-                      //       }else if(finalLink[h].match(/^affExtParam1/g)){
-                      //         finalLink[h] = 'demoyou'
-                      //       }
-                      //     }
-                      //   let sstarget= finalLink.join('&').replace(/&demoyou/g, '');
-                      //     tagnot= ("https://linksredirect.com/?cid=76950&subid=kudrat_cl&source=linkkit&url=").concat(encodeURIComponent(sstarget));
-                      //      example(tagnot.replace(/[[]/g,'%5B').replace(/[]]/g,'%5D'));
-                      //   }
+                       }else{
+                        if(urlencode(quelink).match(/flipkart.com/g)){
+                          let finalLink =urlencode(quelink).split('&');
+                          for (let h = 0; h < finalLink.length; h++) {
+                            if(finalLink[h].match(/^affid/g)){
+                              finalLink[h] = 'demoyou'
+                            }else if(finalLink[h].match(/^affExtParam1/g)){
+                              finalLink[h] = 'demoyou'
+                            }
+                          }
+                        let sstarget= finalLink.join('&').replace(/&demoyou/g, '');
+                          tagnot= ("https://linksredirect.com/?cid=76950&subid=kudrat_cl&source=linkkit&url=").concat(encodeURIComponent(sstarget));
+                           example(tagnot.replace(/[[]/g,'%5B').replace(/[]]/g,'%5D'));
+                        }
                       }
                       async function example(dddd) {
                         let response =await bitly.shorten(dddd);
                       final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
                     }
                   })
-                }else if(unshortenedUrl.match(/flipkart.com/g)){
-                  let tagnotFlipkart;
-                  if(unshortenedUrl.match(/www.flipkart.com/g)){
-                    tagnotFlipkart = unshortenedUrl.replace(/www.flipkart.com/g, 'dl.flipkart.com/dl');
-                  }else{
-                    tagnotFlipkart = unshortenedUrl;
-                  }
-                  if(tagnotFlipkart.match(/[?]/g)){
-                  let finalLink =tagnotFlipkart.split('&');
-                  console.log('finalLink: ', finalLink);
-                  for (let h = 0; h < finalLink.length; h++) {
-                    if(finalLink[h].match(/[?]/g)){
-                      if(finalLink[h].match(/affid/g)){
-                        let finalLinkssd =finalLink[h].split('?');
-                        finalLink[h] = finalLinkssd[0].concat('?')
-                      }else if(finalLink[h].match(/affExtParam1/g)){
-                        let finalLinkssd =finalLink[h].split('?');
-                        finalLink[h] = finalLinkssd[0].concat('?')
-                      } else if(finalLink[h].match(/affExtParam2/g)){
-                        let finalLinkssd =finalLink[h].split('?');
-                        finalLink[h] = finalLinkssd[0].concat('?')
+                    }else if(unshortenedUrl.match(/flipkart.com/g)){
+                      let tagnotFlipkart;
+                      if(unshortenedUrl.match(/www.flipkart.com/g)){
+                        tagnotFlipkart = unshortenedUrl.replace(/www.flipkart.com/g, 'dl.flipkart.com/dl');
+                      }else{
+                        tagnotFlipkart = unshortenedUrl;
                       }
-                    }else if(finalLink[h].match(/^affExtParam1/g)){
-                      finalLink[h] = "";
-                    }else if(finalLink[h].match(/^affExtParam2/g)){
-                      finalLink[h] = ""
-                    }else if(finalLink[h].match(/^affid/g)){
-                      finalLink[h] = ""
+                      if(tagnotFlipkart.match(/[?]/g)){
+                      let finalLink =tagnotFlipkart.split('&');
+                      console.log('finalLink: ', finalLink);
+                      for (let h = 0; h < finalLink.length; h++) {
+                        if(finalLink[h].match(/[?]/g)){
+                          if(finalLink[h].match(/affid/g)){
+                            let finalLinkssd =finalLink[h].split('?');
+                            finalLink[h] = finalLinkssd[0].concat('?')
+                          }else if(finalLink[h].match(/affExtParam1/g)){
+                            let finalLinkssd =finalLink[h].split('?');
+                            finalLink[h] = finalLinkssd[0].concat('?')
+                          } else if(finalLink[h].match(/affExtParam2/g)){
+                            let finalLinkssd =finalLink[h].split('?');
+                            finalLink[h] = finalLinkssd[0].concat('?')
+                          }
+                        }else if(finalLink[h].match(/^affExtParam1/g)){
+                          finalLink[h] = "";
+                        }else if(finalLink[h].match(/^affExtParam2/g)){
+                          finalLink[h] = ""
+                        }else if(finalLink[h].match(/^affid/g)){
+                          finalLink[h] = ""
+                        }
+                      }
+                      var dateObj = new Date();
+                      var month = dateObj.getUTCMonth() + 1; //months from 1-12
+                      var day = dateObj.getUTCDate();
+                      var year = dateObj.getUTCFullYear();
+                      var hour = dateObj.getHours();
+                      var minu = dateObj.getMinutes();
+                      let ren = Math.random().toString(36).substring(7);
+                    let tagnots= finalLink.join('&').replace(/@/g, '').replace(/&&/g, '&').replace(/(\?&)/g, '?').replace(/&&&/g, '&');
+                    tagnot= tagnots.concat('&affid=siqra1446').concat('&affExtParam1='+month+day+year+'cl'+hour+minu+ren).concat('&affExtParam2=FK_Kudrat').replace(/(\?&)/g, '?').replace(/&&/g, '&');
+                     console.log('tagnot: ', tagnot);
+                    }else{
+                      var dateObj = new Date();
+                            var month = dateObj.getUTCMonth() + 1; //months from 1-12
+                            var day = dateObj.getUTCDate();
+                            var year = dateObj.getUTCFullYear();
+                            var hour = dateObj.getHours();
+                            var minu = dateObj.getMinutes();
+                            let ren = Math.random().toString(36).substring(7);
+                     tagnot= tagnotFlipkart.concat('?affid=siqra1446').concat('&affExtParam1='+month+day+year+'cl'+hour+minu+ren).concat('&affExtParam2=FK_Kudrat');
                     }
-                  }
-                  var dateObj = new Date();
-                  var month = dateObj.getUTCMonth() + 1; //months from 1-12
-                  var day = dateObj.getUTCDate();
-                  var year = dateObj.getUTCFullYear();
-                  var hour = dateObj.getHours();
-                  var minu = dateObj.getMinutes();
-                  let ren = Math.random().toString(36).substring(7);
-                let tagnots= finalLink.join('&').replace(/@/g, '').replace(/&&/g, '&').replace(/(\?&)/g, '?').replace(/&&&/g, '&');
-                tagnot= tagnots.concat('&affid=siqra1446').concat('&affExtParam1='+month+day+year+'cl'+hour+minu+ren).concat('&affExtParam2=FK_Kudrat').replace(/(\?&)/g, '?').replace(/&&/g, '&');
-                 console.log('tagnot: ', tagnot);
-                }else{
-                  var dateObj = new Date();
-                        var month = dateObj.getUTCMonth() + 1; //months from 1-12
-                        var day = dateObj.getUTCDate();
-                        var year = dateObj.getUTCFullYear();
-                        var hour = dateObj.getHours();
-                        var minu = dateObj.getMinutes();
-                        let ren = Math.random().toString(36).substring(7);
-                 tagnot= tagnotFlipkart.concat('?affid=siqra1446').concat('&affExtParam1='+month+day+year+'cl'+hour+minu+ren).concat('&affExtParam2=FK_Kudrat');
-                }
-
-                 example(tagnot.replace(/&demoyou/g, '').replace(/%25/g,'%'));
-                    async function example(dddd) {
-                      console.log('dddd: ', dddd);
-                      let response =await bitly.shorten(dddd);
-                    final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
-                    console.log('final[j]: ', final[j]);
-                    //  postImageWidth(response.link,ListflagData.bestshopping_token);
-                  }
+  
+                     example(tagnot.replace(/&demoyou/g, '').replace(/%25/g,'%'));
+                        async function example(dddd) {
+                          console.log('dddd: ', dddd);
+                          let response =await bitly.shorten(dddd);
+                        final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
+                        console.log('final[j]: ', final[j]);
+                        //  postImageWidth(response.link,ListflagData.bestshopping_token);
+                      }
                     }else{
                       // tall(unshortenedUrl, {
                       //   method: 'HEAD',
                       //   maxRedirect: 5
-                      // }).then(function(unshortenedUrl){ 
-                        unshort(urls[0]).then(function(unshortenedUrls){ 
-                          let unshortenedUrl = unshortenedUrls.unshorten.replace(/&amp;/g,'&');
-                    // if(unshortenedUrl.match(/amazon.in/g) && unshortenedUrl.match(/tag/g)){
-                    //   console.log("----ui");
-                    //   let finalLink =unshortenedUrl.split('&');
-                    //   for (let h = 0; h < finalLink.length; h++) {
-                    //     if(finalLink[h].match(/^tag/g)){
-                    //       finalLink[h] = 'tag='+ListflagData.post_tag
-                    //     }
-                    //   }
+                      // }).then(function(unshortenedUrls){ 
+                      // let unshortenedUrl = unshortenedUrls.replace(/&amp;/g,'&');
+
+                      unshort(unshortenedUrl).then(function(unshortenedUrls){ 
+                        let unshortenedUrl = unshortenedUrls.unshorten.replace(/&amp;/g,'&');
                       if(unshortenedUrl.match(/amazon.in/g)){
                         let tagnot;
                         if(unshortenedUrl.match(/tag/g)){
@@ -983,7 +1005,7 @@ function postImageWidth(post_link,token) {
                       if(finalLink[h].match(/[?]/g)){
                         if(finalLink[h].match(/tag/g)){
                           let finalLinkssd =finalLink[h].split('?');
-                          finalLink[h] = finalLinkssd[0].concat('?tag='+ListflagData.post_tag)
+                          finalLink[h] = finalLinkssd[0].concat('?tag='+ListflagData.org_post_tag)
                         }
                       }else if(finalLink[h].match(/^ascsubtag/g)){
                         finalLink[h] = 'demoyou'
@@ -991,33 +1013,25 @@ function postImageWidth(post_link,token) {
                         finalLink[h] = 'demoyou'
                       }else if(finalLink[h].match(/^ascsub/g)){
                         finalLink[h] = 'demoyou'
-//                       }else if(finalLink[h].match(/^linkCode/g)){
-//                         finalLink[h] = 'demoyou'
-//                       }else if(finalLink[h].match(/^linkId/g)){
-//                         finalLink[h] = 'demoyou'
-//                       }else if(finalLink[h].match(/^qid/g)){
-//                         finalLink[h] = 'demoyou'
                       }else if(finalLink[h].match(/^tag/g)){
-                        finalLink[h] = 'tag='+ListflagData.post_tag
+                        finalLink[h] = 'tag='+ListflagData.org_post_tag
                       }
                     }
                      tagnot= finalLink.join('&').replace(/@/g, '');
                     }else{
                      if(unshortenedUrl.match(/[?]/g)){
-                      tagnot= unshortenedUrl.replace(/@/g, '').concat('&tag='+ListflagData.post_tag);
+                      tagnot= unshortenedUrl.replace(/@/g, '').concat('&tag='+ListflagData.org_post_tag);
                        }else{
-                      tagnot= unshortenedUrl.replace(/@/g, '').concat('?tag='+ListflagData.post_tag);
+                      tagnot= unshortenedUrl.replace(/@/g, '').concat('?tag='+ListflagData.org_post_tag);
                        }
                     }
                    example(tagnot.replace(/&demoyou/g, '').replace(/%25/g,'%'));
                           async function example(dddd) {
                             let response =await bitly.shorten(dddd);
                           final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
-                         postImageWidth(response.link,ListflagData.bestshopping_token); 
+                            //  postImageWidth(response.link,ListflagData.bestshopping_token);
                         }
                       }else{
-                        // let finalLink =unshortenedUrl.split('?');
-                        // final[j] = array[j].replace("["+urls[0].replace(/@/g, ' ').trim()+"]",finalLink[0]).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
                         final[j] = ' ';
                       }
                     })
@@ -1026,10 +1040,71 @@ function postImageWidth(post_link,token) {
                       })
                       .catch(function(err){ console.error('AAAW 👻', err)})
                 }else{
-                  // final[j] = array[j].replace(/&#xA0;/g,' ').replace(/.#x...../g,' %E2%99%A8 ').replace(/[[\]]/g,'').replace(/&/g, 'and').replace(/;/g, ' ').replace(/#/g, '');
-                  final[j] = array[j].replace(/[?]q=%23/g,'#').replace(/cashkaro/g,'Deal').replace(/Cashkaro/g,'Deal').replace(/@frcp_deals/g,' ').replace(/stg/g,'Best_shopping').replace(/ihd/g,' ').replace(/&#xA0;/g,' ').replace(/.#x...../g,' %E2%99%A8 ').replace(/[[\]]/g,'').replace(/&/g, 'and').replace(/;/g, ' ').replace(/^\s+|\s+$|\s+(?=\s)/g, '');
+                  // final[j] = array[j].replace(/cashkaro/g,'Deal').replace(/Cashkaro/g,'Deal').replace(/@frcp_deals/g,' ').replace(/stg/g,'Best_shopping').replace(/ihd/g,' ').replace(/&#xA0;/g,' ').replace(/.#x...../g,' %E2%99%A8 ').replace(/[[\]]/g,'').replace(/&/g, 'and').replace(/;/g, ' ').replace(/^\s+|\s+$|\s+(?=\s)/g, '');
+                  final[j] = array[j].replace(/[?]q=%23/g,'#').replace(/frcp/g,'').replace(/FRCP/g,'').replace(/cashkaro/g,'Deal').replace(/Cashkaro/g,'Deal').replace(/@frcp_deals/g,' ').replace(/stg/g,'Best_shopping').replace(/ihd/g,' ').replace(/&#xA0;/g,' ').replace(/.#x...../g,' %E2%99%A8 ').replace(/[[\]]/g,'').replace(/&/g, 'and').replace(/;/g, ' ').replace(/^\s+|\s+$|\s+(?=\s)/g, '');
                 }
               }
+              if(array_length == 1){
+				  
+                setTimeout(()=>{
+                      let finalAmazon = final.join('\n');
+                let getUrlPost =  finalAmazon.match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g);
+              let finalIdListed = JSON.parse(ListflagData.array_data).user;
+             let finalPostList = JSON.parse(ListflagData.amzn_tele_value).telenogroup;
+              if(finalAmazon.match(/amzn.to/g)){
+              postImageWidth(getUrlPost[0],ListflagData.bestshopping_token,ListflagData.kudart_token,nextId,finalAmazon,finalPostList);
+              }else{
+         
+              let finalAmazon = final.join('\n');
+            if(finalAmazon.match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g)){
+              let finalIdList = JSON.parse(ListflagData.array_data).user;
+              let finalPostList;
+             if(finalAmazon.match(/amzn.to/g)){
+              finalPostList = JSON.parse(ListflagData.amzn_tele_value).telenogroup;
+             }else{
+              finalPostList = JSON.parse(ListflagData.tele_values).telenogroup;
+             }
+              console.log('finalPostList: ', finalPostList);
+              console.log('finalPostList: ', finalPostList.length);
+              let insertFeild = [rides[0].post_id + i, JSON.stringify(finalAmazon.replace(/[^0-9a-zA-Zㄱ-힣+×÷=%♤♡☆♧)(*&^/~#@!-:;,?`_|<>{}¥£€$◇■□●○•°※¤《》¡¿₩\[\]\"\' \\]/g ,""))]
+              let sqlss = "INSERT INTO post_telegram (post_id,data) VALUES (" + nextId + "," + JSON.stringify(finalAmazon.replace(/[^0-9a-zA-Zㄱ-힣+×÷=%♤♡☆♧)(*&^/~#@!-:;,?`_|<>{}¥£€$◇■□●○•°※¤《》¡¿₩\[\]\"\' \\]/g ,"")) + ")";
+              connection.query(sqlss, [insertFeild], function (err, rides) {
+                if (err) {
+                  console.log('err: ', err);
+                }else{
+              if(ListflagData.ihd_tele_flag == '0' && ListflagData.ihd_watts_flag == '0' ){
+                console.log('---0');
+              }else if(ListflagData.ihd_tele_flag == '1' && ListflagData.ihd_watts_flag == '1' ){
+                for (let l = 0; l < finalPostList.length; l++) {
+                  // if(finalPostList[l].groupflag == '0'){
+                    teleAutoPostChannel(finalAmazon,finalPostList[l].groupname,ListflagData.kudart_token);
+                    // teleAutoPost(finalAmazon);
+                  // }
+                }
+                whatsapp_posts1(finalAmazon, finalIdList[0].apiKey,finalIdList[0].phoneId,finalIdList[0].productId);
+                whatsapp_posts2(finalAmazon, finalIdList[1].apiKey,finalIdList[1].phoneId,finalIdList[1].productId);
+              }else if(ListflagData.ihd_tele_flag == '1' && ListflagData.ihd_watts_flag == '0' ){
+                for (let l = 0; l < finalPostList.length; l++) {
+                  // if(finalPostList[l].groupflag == '0'){
+                    teleAutoPostChannel(finalAmazon,finalPostList[l].groupname,ListflagData.kudart_token);
+                    // teleAutoPost(finalAmazon);
+                  // }
+                }
+              }else if(ListflagData.ihd_tele_flag == '0' && ListflagData.ihd_watts_flag == '1' ){
+                whatsapp_posts1(finalAmazon, finalIdList[0].apiKey,finalIdList[0].phoneId,finalIdList[0].productId);
+                whatsapp_posts2(finalAmazon, finalIdList[1].apiKey,finalIdList[1].phoneId,finalIdList[1].productId);
+              }else{
+                console.log('---4');
+              }
+            }
+          })
+          }
+
+
+              }
+               },Math.ceil(array.length/5)*3500);
+             
+              } else{
               setTimeout(()=>{
                 let finalAmazon = final.join('\n');
               if(finalAmazon.match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g)){
@@ -1040,36 +1115,33 @@ function postImageWidth(post_link,token) {
                }else{
                 finalPostList = JSON.parse(ListflagData.tele_values).telenogroup;
                }
+                console.log('finalPostList: ', finalPostList);
+                console.log('finalPostList: ', finalPostList.length);
                 let insertFeild = [rides[0].post_id + i, JSON.stringify(finalAmazon.replace(/[^0-9a-zA-Zㄱ-힣+×÷=%♤♡☆♧)(*&^/~#@!-:;,?`_|<>{}¥£€$◇■□●○•°※¤《》¡¿₩\[\]\"\' \\]/g ,""))]
-                let sqlss = "INSERT INTO post_telegram1 (post_id,data) VALUES (" + nextId + "," + JSON.stringify(finalAmazon.replace(/[^0-9a-zA-Zㄱ-힣+×÷=%♤♡☆♧)(*&^/~#@!-:;,?`_|<>{}¥£€$◇■□●○•°※¤《》¡¿₩\[\]\"\' \\]/g ,"")) + ")";
+                let sqlss = "INSERT INTO post_telegram (post_id,data) VALUES (" + nextId + "," + JSON.stringify(finalAmazon.replace(/[^0-9a-zA-Zㄱ-힣+×÷=%♤♡☆♧)(*&^/~#@!-:;,?`_|<>{}¥£€$◇■□●○•°※¤《》¡¿₩\[\]\"\' \\]/g ,"")) + ")";
                 connection.query(sqlss, [insertFeild], function (err, rides) {
                   if (err) {
                     console.log('err: ', err);
                   }else{
-                    // teleAutoPost(finalAmazon)
-                if(ListflagData.tele_flag == '0' && ListflagData.watts_flag == '0' ){
+                if(ListflagData.ihd_tele_flag == '0' && ListflagData.ihd_watts_flag == '0' ){
                   console.log('---0');
-                }else if(ListflagData.tele_flag == '1' && ListflagData.watts_flag == '1' ){
+                }else if(ListflagData.ihd_tele_flag == '1' && ListflagData.ihd_watts_flag == '1' ){
                   for (let l = 0; l < finalPostList.length; l++) {
-                      // if(userExists[0].text_img != undefined){
-                      //   var cddsd = userExists[0].text_img.replace(/.*\(|\).*/g, '');
-                      //   teleAutoPhotoPostChannel(finalAmazon,finalPostList[l].groupname,cddsd);
-                      // }else{
+                    // if(finalPostList[l].groupflag == '0'){
                       teleAutoPostChannel(finalAmazon,finalPostList[l].groupname,ListflagData.kudart_token);
+                      // teleAutoPost(finalAmazon);
                     // }
                   }
                   whatsapp_posts1(finalAmazon, finalIdList[0].apiKey,finalIdList[0].phoneId,finalIdList[0].productId);
                   whatsapp_posts2(finalAmazon, finalIdList[1].apiKey,finalIdList[1].phoneId,finalIdList[1].productId);
-                }else if(ListflagData.tele_flag == '1' && ListflagData.watts_flag == '0' ){
+                }else if(ListflagData.ihd_tele_flag == '1' && ListflagData.ihd_watts_flag == '0' ){
                   for (let l = 0; l < finalPostList.length; l++) {
-                    // if(userExists[0].text_img != undefined){
-                    //   var cddsds = userExists[0].text_img.replace(/.*\(|\).*/g, '');
-                    //   teleAutoPhotoPostChannel(finalAmazon,finalPostList[l].groupname,cddsds);
-                    // }else{
+                    // if(finalPostList[l].groupflag == '0'){
                       teleAutoPostChannel(finalAmazon,finalPostList[l].groupname,ListflagData.kudart_token);
-                  // }
+                      // teleAutoPost(finalAmazon);
+                    // }
                   }
-                }else if(ListflagData.tele_flag == '0' && ListflagData.watts_flag == '1' ){
+                }else if(ListflagData.ihd_tele_flag == '0' && ListflagData.ihd_watts_flag == '1' ){
                   whatsapp_posts1(finalAmazon, finalIdList[0].apiKey,finalIdList[0].phoneId,finalIdList[0].productId);
                   whatsapp_posts2(finalAmazon, finalIdList[1].apiKey,finalIdList[1].phoneId,finalIdList[1].productId);
                 }else{
@@ -1080,6 +1152,15 @@ function postImageWidth(post_link,token) {
             }
               },Math.ceil(array.length/5)*3500);
             }
+            }else{
+              let sqlss = "INSERT INTO post_telegram (post_id,data) VALUES (" + nextId + ",'demo')";
+              connection.query(sqlss, function (err, rides) {
+                if (err) {
+                console.log('err: ', err);
+                }
+              })
+            }
+          }
           }
         })
       })
