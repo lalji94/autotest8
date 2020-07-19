@@ -1013,6 +1013,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                      let responses ={"link":dddd};
                      return responses;
                     });	
+				console.log("---222",response);
 				
                         final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
                         console.log('final[j]: ', final[j]);
