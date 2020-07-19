@@ -862,8 +862,18 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                       }
                     }
                    example(tagnot.replace(/&demoyou/g, '').replace(/%25/g,'%'));
-                        async function example(dddd) {
-                          let response =await bitly.shorten(dddd);
+//                         async function example(dddd) {
+//                           let response =await bitly.shorten(dddd);
+		  async function example(dddd) {
+                    let response = await bitly
+                    .shorten(dddd)
+                    .then(function(result) {
+                      return result;
+                    })
+                    .catch(function(error) {
+                     let responses ={"link":dddd};
+                     return responses;
+                    });
                         final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
                         //  postImageWidth(response.link,ListflagData.bestshopping_token);
                       }
@@ -924,8 +934,18 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                            example(tagnot.replace(/[[]/g,'%5B').replace(/[]]/g,'%5D'));
                         }
                       }
-                      async function example(dddd) {
-                        let response =await bitly.shorten(dddd);
+//                       async function example(dddd) {
+//                         let response =await bitly.shorten(dddd);
+                   async function example(dddd) {
+                    let response = await bitly
+                    .shorten(dddd)
+                    .then(function(result) {
+                      return result;
+                    })
+                    .catch(function(error) {
+                     let responses ={"link":dddd};
+                     return responses;
+                    });
                       final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
                     }
                   })
@@ -981,9 +1001,19 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                     }
   
                      example(tagnot.replace(/&demoyou/g, '').replace(/%25/g,'%'));
-                        async function example(dddd) {
-                          console.log('dddd: ', dddd);
-                          let response =await bitly.shorten(dddd);
+//                         async function example(dddd) {
+//                          let response =await bitly.shorten(dddd);
+			async function example(dddd) {
+                    let response = await bitly
+                    .shorten(dddd)
+                    .then(function(result) {
+                      return result;
+                    })
+                    .catch(function(error) {
+                     let responses ={"link":dddd};
+                     return responses;
+                    });	
+				
                         final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
                         console.log('final[j]: ', final[j]);
                         //  postImageWidth(response.link,ListflagData.bestshopping_token);
@@ -1026,8 +1056,18 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                        }
                     }
                    example(tagnot.replace(/&demoyou/g, '').replace(/%25/g,'%'));
-                          async function example(dddd) {
-                            let response =await bitly.shorten(dddd);
+//                           async function example(dddd) {
+//                             let response =await bitly.shorten(dddd);
+		   async function example(dddd) {
+                    let response = await bitly
+                    .shorten(dddd)
+                    .then(function(result) {
+                      return result;
+                    })
+                    .catch(function(error) {
+                     let responses ={"link":dddd};
+                     return responses;
+                    });
                           final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
                             //  postImageWidth(response.link,ListflagData.bestshopping_token);
                         }
