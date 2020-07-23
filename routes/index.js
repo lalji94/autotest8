@@ -946,7 +946,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                      let responses ={"link":dddd};
                      return responses;
                     });
-                      final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
+                      final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link);
                     }
                   })
 //                     }else if(unshortenedUrl.match(/flipkart.com/g)){
@@ -1069,7 +1069,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                      let responses ={"link":dddd};
                      return responses;
                     });
-                          final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
+                          final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link);
                             //  postImageWidth(response.link,ListflagData.bestshopping_token);
                         }
                       }else{
