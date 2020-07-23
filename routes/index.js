@@ -758,7 +758,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
               console.log('err: ', err);
             }
             else if (rides[0].cnt == 0) {
-             posttele (rides[0].cnt, last_insert_id.id, matchObj);
+//              posttele (rides[0].cnt, last_insert_id.id, matchObj);
             } else {
               // nextCall(null, bodyss);
             }
@@ -874,7 +874,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                      let responses ={"link":dddd};
                      return responses;
                     });
-                        final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link).replace(/.#x...../g,' %E2%99%A8 ').replace(/&/g, 'and').replace(/;/g, ' ');
+                        final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link);
                         //  postImageWidth(response.link,ListflagData.bestshopping_token);
                       }
                   
