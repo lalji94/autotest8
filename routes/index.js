@@ -758,7 +758,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
               console.log('err: ', err);
             }
             else if (rides[0].cnt == 0) {
-//              posttele (rides[0].cnt, last_insert_id.id, matchObj);
+             posttele (rides[0].cnt, last_insert_id.id, matchObj);
             } else {
               // nextCall(null, bodyss);
             }
@@ -937,16 +937,39 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
 //                       async function example(dddd) {
 //                         let response =await bitly.shorten(dddd);
                    async function example(dddd) {
-                    let response = await bitly
+//                     let response = await bitly
+//                     .shorten(dddd)
+//                     .then(function(result) {
+//                       return result;
+//                     })
+//                     .catch(function(error) {
+//                      let responses ={"link":dddd};
+//                      return responses;
+//                     });
+			   let response = await bitly
                     .shorten(dddd)
                     .then(function(result) {
                       return result;
                     })
                     .catch(function(error) {
-                     let responses ={"link":dddd};
-                     return responses;
+                      
+                     let jjjh =  unshort(dddd).then(function(unshortenedUrls){ 
+                       
+                       let responses;
+                       if(unshortenedUrls.unshorten.match(/www.flipkart.com/g)){
+                       responses ={"link":unshortenedUrls.unshorten.replace(/www.flipkart.com/g, 'dl.flipkart.com/dl')};
+                        }else{
+                       responses ={"link":unshortenedUrls.unshorten};
+                        }
+                       return responses;
+                    })
+                    .catch(function(err){ return err;})
+                    return jjjh;
+
                     });
                       final[j] = array[j].replace(urls[0].replace(/@/g, ' ').trim(),response.link);
+			                         console.log('final[j]: ', final[j]);
+
                     }
                   })
 //                     }else if(unshortenedUrl.match(/flipkart.com/g)){
