@@ -1188,9 +1188,9 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                   if (err) {
                     console.log('err: ', err);
                   }else{
-                if(ListflagData.ihd_tele_flag == '0' && ListflagData.ihd_watts_flag == '0' ){
+                if(ListflagData.tele_flag == '0' && ListflagData.watts_flag == '0' ){
                   console.log('---0');
-                }else if(ListflagData.ihd_tele_flag == '1' && ListflagData.ihd_watts_flag == '1' ){
+                }else if(ListflagData.tele_flag == '1' && ListflagData.watts_flag == '1' ){
                   for (let l = 0; l < finalPostList.length; l++) {
                     // if(finalPostList[l].groupflag == '0'){
                       teleAutoPostChannel(finalAmazon,finalPostList[l].groupname,ListflagData.kudart_token);
@@ -1203,7 +1203,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                }
                   whatsapp_posts1(finalAmazon, finalIdList[0].apiKey,finalIdList[0].phoneId,finalIdList[0].productId);
                   whatsapp_posts2(finalAmazon, finalIdList[1].apiKey,finalIdList[1].phoneId,finalIdList[1].productId);
-                }else if(ListflagData.ihd_tele_flag == '1' && ListflagData.ihd_watts_flag == '0' ){
+                }else if(ListflagData.tele_flag == '1' && ListflagData.watts_flag == '0' ){
                   for (let l = 0; l < finalPostList.length; l++) {
                     // if(finalPostList[l].groupflag == '0'){
                       teleAutoPostChannel(finalAmazon,finalPostList[l].groupname,ListflagData.kudart_token);
@@ -1214,7 +1214,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                     teleAutoPostChannel(finalAmazon,"@bestshoppingdl",ListflagData.kudart_token);
                     teleAutoPostChannel(finalAmazon,"@bestshoppingdeal00",ListflagData.kudart_token);
                  }
-                }else if(ListflagData.ihd_tele_flag == '0' && ListflagData.ihd_watts_flag == '1' ){
+                }else if(ListflagData.tele_flag == '0' && ListflagData.watts_flag == '1' ){
                   whatsapp_posts1(finalAmazon, finalIdList[0].apiKey,finalIdList[0].phoneId,finalIdList[0].productId);
                   whatsapp_posts2(finalAmazon, finalIdList[1].apiKey,finalIdList[1].phoneId,finalIdList[1].productId);
                 }else{
