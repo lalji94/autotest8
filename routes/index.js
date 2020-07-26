@@ -246,6 +246,35 @@ router.get('/telegram_posts', function (req, res, next) {
   })
 });
 
+router.post('/editFlipkartFlags', function (req, res) {
+  async.waterfall([
+    function (nextCall) {
+      values =  [ req.body.defaultChoice ]
+      var sqlss = "UPDATE post_flags set flipkart_server =? WHERE id = 1";
+      connection.query(sqlss, values, function (err, rides) {
+        if (err) {
+          return nextCall({
+            "message": "something went wrong",
+          });
+        }
+        nextCall(null, rides[0]);
+      })
+    }
+  ], function (err, response) {
+    if (err) {
+      return res.send({
+        status: err.code ? err.code : 400,
+        message: (err && err.msg) || "someyhing went wrong"
+      });
+    }
+    return res.send({
+      status: 200,
+      message: "Edit post flag update sucessfully",
+      data: response
+    });
+  });
+});
+
 // router.get('/telegram_postss', function (req, res, next) {
 //   async.waterfall([
 //     function (nextCall) {
