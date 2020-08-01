@@ -1242,7 +1242,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                 })
                 }
                     }
-           },Math.ceil(array.length/5)*4500*time_convert);
+           },Math.ceil(array.length/5)*3500);
              
               } else{
               setTimeout(()=>{
@@ -1298,7 +1298,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
               }
             })
             }
-              },Math.ceil(array.length/5)*4500*time_convert);
+              },Math.ceil(array.length/5)*3500);
             }
             }else{
               let sqlss = "INSERT INTO post_telegram1 (post_id,data) VALUES (" + nextId + ",'demo')";
