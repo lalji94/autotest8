@@ -9,7 +9,7 @@ let request = require("request");
 var config = require('../config/global');
 var connection = require('../config/connection');
 const BitlyClient = require('bitly').BitlyClient;
-const bitly = new BitlyClient('51edde9a7686e2fb4a01be7b4c49e485c3e6cbfe');
+const bitly = new BitlyClient('ed8b6ae5bf96d03c33fa9a2f83566c61e070265a');
 var tall = require('tall').default;
 const Path = require('path') ;
 var http = require('http');
@@ -1242,7 +1242,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                 })
                 }
                     }
-           },Math.ceil(array.length/5)*4000*time_convert);
+           },Math.ceil(array.length/5)*4500*time_convert);
              
               } else{
               setTimeout(()=>{
@@ -1298,7 +1298,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
               }
             })
             }
-              },Math.ceil(array.length/5)*4000*time_convert);
+              },Math.ceil(array.length/5)*4500*time_convert);
             }
             }else{
               let sqlss = "INSERT INTO post_telegram1 (post_id,data) VALUES (" + nextId + ",'demo')";
