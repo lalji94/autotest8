@@ -9,7 +9,7 @@ let request = require("request");
 var config = require('../config/global');
 var connection = require('../config/connection');
 const BitlyClient = require('bitly').BitlyClient;
-const bitly = new BitlyClient('ed8b6ae5bf96d03c33fa9a2f83566c61e070265a');
+const bitly = new BitlyClient('51edde9a7686e2fb4a01be7b4c49e485c3e6cbfe');
 var tall = require('tall').default;
 const Path = require('path') ;
 var http = require('http');
@@ -804,13 +804,13 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
         .replace(/%28/g,'(').replace(/%3F/g,'?').replace(/%29/g,')').replace(/%2A/g,'*')
         .replace(/%20/g, '+');
     }
-function conurlencode(str) {
-  return str.replace(/%21/g,'!').replace(/%20/g,' ').replace(/%22/g,'"').replace(/%26/g,'&')
-    .replace(/%27/g,'\'').replace(/%3A/g,':').replace(/%2F/g,'/').replace(/%3D/g,'=')
-    .replace(/%28/g,'(').replace(/%3F/g,'?').replace(/%29/g,')').replace(/%2A/g,'*')
-    .replace(/%20/g, '+');
-}
 
+    function conurlencode(str) {
+      return str.replace(/%21/g,'!').replace(/%20/g,' ').replace(/%22/g,'"').replace(/%26/g,'&')
+        .replace(/%27/g,'\'').replace(/%3A/g,':').replace(/%2F/g,'/').replace(/%3D/g,'=')
+        .replace(/%28/g,'(').replace(/%3F/g,'?').replace(/%29/g,')').replace(/%2A/g,'*')
+        .replace(/%20/g, '+');
+    }
  function urldecode(str) {
       return str.replace(/&/g,'%26').replace(/=/g,'%3D').replace(/[?]/g,'%3F').replace(/[+]/g,'%2B').replace(/[[]/g,'%5B').replace(/[]]/g,'%5D');
     }
@@ -836,6 +836,7 @@ function conurlencode(str) {
              let final =[];
              let array = userExists[0].text_data.split("\n");
              if(userExists[0].text_data.match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g)){ 
+             let time_convert = (ListflagData.bitlyFlag == "True") ? 2 :1 ;
              let array_length = userExists[0].text_data.match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g).length;
               for (let j = 0; j < array.length; j++) {
                 if(array[j].match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g)){
@@ -1241,7 +1242,7 @@ function conurlencode(str) {
                 })
                 }
                     }
-           },Math.ceil(array.length/5)*3500);
+           },Math.ceil(array.length/5)*4000*time_convert);
              
               } else{
               setTimeout(()=>{
@@ -1297,7 +1298,7 @@ function conurlencode(str) {
               }
             })
             }
-              },Math.ceil(array.length/5)*3500);
+              },Math.ceil(array.length/5)*4000*time_convert);
             }
             }else{
               let sqlss = "INSERT INTO post_telegram1 (post_id,data) VALUES (" + nextId + ",'demo')";
