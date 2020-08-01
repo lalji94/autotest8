@@ -131,6 +131,33 @@ router.get('/telegram_post', function (req, res, next) {
   })
 });
 
+    router.get('/allinoneappPoster', function (req, res, next) {
+      async.waterfall([
+        function (nextCall) {
+        let sqlss = "SELECT * FROM diff_net_posts";
+          console.log('sqlss: ', sqlss);
+          connection.query(sqlss, function (err, rides) {
+            if (err) {
+              return nextCall({
+                "message": "something went wrong",
+              });
+            }
+          nextCall(null,rides);
+          })
+        },
+      ], function (err, response) {
+        if (err) {
+          return res.send({
+            status: err.code ? err.code : 400,
+            message: (err && err.msg) || "someyhing went wrong"
+          });
+        }
+        return res.send({
+          data: response
+        });
+      })
+    });
+
 router.get('/telegram', function (req, res, next) {
   async.waterfall([
     function (nextCall) {
