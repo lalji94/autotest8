@@ -131,33 +131,6 @@ router.get('/telegram_post', function (req, res, next) {
   })
 });
 
-    router.get('/allinoneappPoster', function (req, res, next) {
-      async.waterfall([
-        function (nextCall) {
-        let sqlss = "SELECT * FROM diff_net_posts";
-          console.log('sqlss: ', sqlss);
-          connection.query(sqlss, function (err, rides) {
-            if (err) {
-              return nextCall({
-                "message": "something went wrong",
-              });
-            }
-          nextCall(null,rides);
-          })
-        },
-      ], function (err, response) {
-        if (err) {
-          return res.send({
-            status: err.code ? err.code : 400,
-            message: (err && err.msg) || "someyhing went wrong"
-          });
-        }
-        return res.send({
-          data: response
-        });
-      })
-    });
-
 router.get('/telegram', function (req, res, next) {
   async.waterfall([
     function (nextCall) {
@@ -1241,9 +1214,9 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                       if (err) {
                         console.log('err: ', err);
                       }else{
-                    if(ListflagData.ihd_tele_flag == '0' && ListflagData.ihd_watts_flag == '0' ){
+                    if(ListflagData.tele_flag == '0' && ListflagData.watts_flag == '0' ){
                       console.log('---0');
-                    }else if(ListflagData.ihd_tele_flag == '1' && ListflagData.ihd_watts_flag == '1' ){
+                    }else if(ListflagData.tele_flag == '1' && ListflagData.watts_flag == '1' ){
                       for (let l = 0; l < finalPostList.length; l++) {
                         // if(finalPostList[l].groupflag == '0'){
                           teleAutoPostChannel(finalAmazon,finalPostList[l].groupname,ListflagData.kudart_token);
@@ -1252,14 +1225,14 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                       }
                       whatsapp_posts1(finalAmazon, finalIdList[0].apiKey,finalIdList[0].phoneId,finalIdList[0].productId);
                       whatsapp_posts2(finalAmazon, finalIdList[1].apiKey,finalIdList[1].phoneId,finalIdList[1].productId);
-                    }else if(ListflagData.ihd_tele_flag == '1' && ListflagData.ihd_watts_flag == '0' ){
+                    }else if(ListflagData.tele_flag == '1' && ListflagData.watts_flag == '0' ){
                       for (let l = 0; l < finalPostList.length; l++) {
                         // if(finalPostList[l].groupflag == '0'){
                           teleAutoPostChannel(finalAmazon,finalPostList[l].groupname,ListflagData.kudart_token);
                           // teleAutoPost(finalAmazon);
                         // }
                       }
-                    }else if(ListflagData.ihd_tele_flag == '0' && ListflagData.ihd_watts_flag == '1' ){
+                    }else if(ListflagData.tele_flag == '0' && ListflagData.watts_flag == '1' ){
                       whatsapp_posts1(finalAmazon, finalIdList[0].apiKey,finalIdList[0].phoneId,finalIdList[0].productId);
                       whatsapp_posts2(finalAmazon, finalIdList[1].apiKey,finalIdList[1].phoneId,finalIdList[1].productId);
                     }else{
@@ -1290,9 +1263,9 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                   if (err) {
                     console.log('err: ', err);
                   }else{
-                if(ListflagData.ihd_tele_flag == '0' && ListflagData.ihd_watts_flag == '0' ){
+                if(ListflagData.tele_flag == '0' && ListflagData.watts_flag == '0' ){
                   console.log('---0');
-                }else if(ListflagData.ihd_tele_flag == '1' && ListflagData.ihd_watts_flag == '1' ){
+                }else if(ListflagData.tele_flag == '1' && ListflagData.watts_flag == '1' ){
                   for (let l = 0; l < finalPostList.length; l++) {
                     // if(finalPostList[l].groupflag == '0'){
                       teleAutoPostChannel(finalAmazon,finalPostList[l].groupname,ListflagData.kudart_token);
@@ -1305,7 +1278,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                }
                   whatsapp_posts1(finalAmazon, finalIdList[0].apiKey,finalIdList[0].phoneId,finalIdList[0].productId);
                   whatsapp_posts2(finalAmazon, finalIdList[1].apiKey,finalIdList[1].phoneId,finalIdList[1].productId);
-                }else if(ListflagData.ihd_tele_flag == '1' && ListflagData.ihd_watts_flag == '0' ){
+                }else if(ListflagData.tele_flag == '1' && ListflagData.watts_flag == '0' ){
                   for (let l = 0; l < finalPostList.length; l++) {
                     // if(finalPostList[l].groupflag == '0'){
                       teleAutoPostChannel(finalAmazon,finalPostList[l].groupname,ListflagData.kudart_token);
@@ -1316,7 +1289,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                     teleAutoPostChannel(finalAmazon,"@bestshoppingdl",ListflagData.kudart_token);
                     teleAutoPostChannel(finalAmazon,"@bestshoppingdeal00",ListflagData.kudart_token);
                  }
-                }else if(ListflagData.ihd_tele_flag == '0' && ListflagData.ihd_watts_flag == '1' ){
+                }else if(ListflagData.tele_flag == '0' && ListflagData.watts_flag == '1' ){
                   whatsapp_posts1(finalAmazon, finalIdList[0].apiKey,finalIdList[0].phoneId,finalIdList[0].productId);
                   whatsapp_posts2(finalAmazon, finalIdList[1].apiKey,finalIdList[1].phoneId,finalIdList[1].productId);
                 }else{
@@ -1340,6 +1313,180 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
         })
       })
     }
+
+    router.get('/api/singleAllInOneData/:id', function (req, res) {
+      async.waterfall([
+        function (nextCall) {
+          var sqlss = " SELECT * FROM diff_net_posts WHERE id =" + req.params.id;
+          connection.query(sqlss, function (err, rides) {
+            if (err) {
+              return nextCall({
+                "message": "something went wrong",
+              });
+            }
+            nextCall(null, rides[0]);
+          })
+        }
+      ], function (err, response) {
+        if (err) {
+          return res.send({
+            status: err.code ? err.code : 400,
+            message: (err && err.msg) || "someyhing went wrong"
+          });
+        }
+        return res.send({
+          status: 200,
+          message: "Single recored sucessfully",
+          data: response
+        });
+      });
+    });
+    
+
+    
+router.post('/api/getAllInOneData', function (req, res) {
+  var response = {
+    "draw": req.body.draw || 0,
+    "recordsTotal": 0,
+    "recordsFiltered": 0,
+    "data": []
+  };
+  async.waterfall([
+    function (nextCall) {
+      var sql = "Select count(*) as TotalCount from ??";
+      // connection.query(sql, ['all_in_one'], function (err, rides) {
+      connection.query(sql, ['diff_net_posts'], function (err, rides) {
+        if (err) {
+          console.log('11');
+          return nextCall({
+            "message": "something went wrong",
+          });
+        }
+        response.recordsTotal = rides[0].TotalCount;
+        response.recordsFiltered = rides[0].TotalCount
+        nextCall(null, rides[0].TotalCount);
+      })
+    }, function (counts, nextCall) {
+      startNum = parseInt(req.body.start) || 0;
+      LimitNum = parseInt(req.body.length) || 10;
+      var query = "Select * from ?? WHERE " + req.body.columns[req.body.order[0].column].data + " LIKE '%" + req.body.search.value + "%' ORDER BY " + req.body.columns[req.body.order[0].column].data + ' ' + req.body.order[0].dir + " limit ? OFFSET ?";
+      connection.query(query, ["diff_net_posts", LimitNum, startNum], function (err, ridess) {
+        if (err) {
+          return nextCall({
+            "message": "something went wrong",
+          });
+        } else if (ridess.length > 0) {
+          response.data = ridess;
+          nextCall();
+        } else {
+          return nextCall({
+            "message": "something went wrong",
+          });
+        }
+      })
+    }
+  ], function (err) {
+    if (err) {
+      return res.send({
+        status: err.code ? err.code : 400,
+        message: (err && err.msg) || "someyhing went wrong"
+      });
+    }
+    return res.send(response);
+  });
+});
+    
+router.post('/api/editAllInOneData', function (req, res) {
+  async.waterfall([
+    function (nextCall) {
+      values =  [
+                  //  req.body.storeIcon,
+                   req.body.sNLink,
+                   req.body.sALink,
+                   req.body.storeN,
+                   req.body.isAffiliated,
+                   req.body.storeID,
+                   req.body.id,
+                ]
+      var sqlss = "UPDATE diff_net_posts set short_url =? ,Landing_Page =? , Brand =?,active_flag =? , domain_url =?  WHERE id = ?";
+      connection.query(sqlss, values, function (err, rides) {
+        if (err) {
+          return nextCall({
+            "message": "something went wrong",
+          });
+        }
+        nextCall(null, rides[0]);
+      })
+    }
+  ], function (err, response) {
+    if (err) {
+      return res.send({
+        status: err.code ? err.code : 400,
+        message: (err && err.msg) || "someyhing went wrong"
+      });
+    }
+    return res.send({
+      status: 200,
+      message: "Edit post create sucessfully",
+      data: response
+    });
+  });
+});
+
+router.delete('/api/deleteAllInOneData/:id', function (req, res) {
+  async.waterfall([
+    function (nextCall) {
+      var sqlss = " DELETE FROM diff_net_posts WHERE id =" + req.params.id;
+      connection.query(sqlss, function (err, rides) {
+        if (err) {
+          return nextCall({
+            "message": "something went wrong",
+          });
+        }
+        nextCall(null, rides[0]);
+      })
+    }
+  ], function (err, response) {
+    if (err) {
+      return res.send({
+        status: err.code ? err.code : 400,
+        message: (err && err.msg) || "someyhing went wrong"
+      });
+    }
+    return res.send({
+      status: 200,
+      message: "deleted recored sucessfully",
+      data: response
+    });
+  });
+});
+
+    router.get('/allinoneappPoster', function (req, res, next) {
+      async.waterfall([
+        function (nextCall) {
+        let sqlss = "SELECT * FROM diff_net_posts";
+          console.log('sqlss: ', sqlss);
+          connection.query(sqlss, function (err, rides) {
+            if (err) {
+              return nextCall({
+                "message": "something went wrong",
+              });
+            }
+          nextCall(null,rides);
+          })
+        },
+      ], function (err, response) {
+        if (err) {
+          return res.send({
+            status: err.code ? err.code : 400,
+            message: (err && err.msg) || "someyhing went wrong"
+          });
+        }
+        return res.send({
+          data: response
+        });
+      })
+    });
 
 function teleAutoPostChannel(finalAmazon,chanelName,token){
     var chatId = chanelName; // <= replace with yours
