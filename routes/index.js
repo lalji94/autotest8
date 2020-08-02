@@ -505,6 +505,70 @@ router.post('/editpostFlags', function (req, res) {
   });
 });
 
+router.post('/editAmznTag', function (req, res) {
+  async.waterfall([
+    function (nextCall) {
+      values =  [
+                   req.body.ihdAmznTag,
+                   req.body.admiatedTag,
+                   req.body.wworldAmznTag,
+                ]
+      var sqlss = "UPDATE post_flags set org_post_tag =? , admitad_post_tag =? , user_post_tag =?  WHERE id = 1";
+      connection.query(sqlss, values, function (err, rides) {
+        if (err) {
+          return nextCall({
+            "message": "something went wrong",
+          });
+        }
+        nextCall(null, rides[0]);
+      })
+    }
+  ], function (err, response) {
+    if (err) {
+      return res.send({
+        status: err.code ? err.code : 400,
+        message: (err && err.msg) || "someyhing went wrong"
+      });
+    }
+    return res.send({
+      status: 200,
+      message: "Edit post flag update sucessfully",
+      data: response
+    });
+  });
+});
+
+router.post('/bitlyPostFlags', function (req, res) {
+  async.waterfall([
+    function (nextCall) {
+      values =  [
+                   req.body.bitly_flag,
+                ]
+      var sqlss = "UPDATE post_flags set bitlyFlag =? WHERE id = 1";
+      connection.query(sqlss, values, function (err, rides) {
+        if (err) {
+          return nextCall({
+            "message": "something went wrong",
+          });
+        }
+        nextCall(null, rides[0]);
+      })
+    }
+  ], function (err, response) {
+    if (err) {
+      return res.send({
+        status: err.code ? err.code : 400,
+        message: (err && err.msg) || "someyhing went wrong"
+      });
+    }
+    return res.send({
+      status: 200,
+      message: "Edit post flag update sucessfully",
+      data: response
+    });
+  });
+});
+
 router.post('/editihdpostFlags', function (req, res) {
   async.waterfall([
     function (nextCall) {
@@ -1456,6 +1520,42 @@ router.delete('/api/deleteAllInOneData/:id', function (req, res) {
     return res.send({
       status: 200,
       message: "deleted recored sucessfully",
+      data: response
+    });
+  });
+});
+
+router.post('/api/addAllInOneData', function (req, res) {
+  async.waterfall([
+    function (nextCall) {
+      values =   [ [
+                  //  req.body.storeIcon,
+                   req.body.sNLink,
+                   req.body.sALink,
+                   req.body.storeN,
+                   req.body.isAffiliated,
+                   req.body.storeID,
+                ] ]
+      let sqlss = "INSERT INTO diff_net_posts (short_url,Landing_Page,Brand,active_flag,domain_url) VALUES ?";
+      connection.query(sqlss, [values], function (err, rides) {
+        if (err) {
+          return nextCall({
+            "message": "something went wrong",
+          });
+        }
+        nextCall(null, rides[0]);
+      })
+    }
+  ], function (err, response) {
+    if (err) {
+      return res.send({
+        status: err.code ? err.code : 400,
+        message: (err && err.msg) || "someyhing went wrong"
+      });
+    }
+    return res.send({
+      status: 200,
+      message: "add post create sucessfully",
       data: response
     });
   });
