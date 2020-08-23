@@ -903,14 +903,14 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
              let time_convert = (ListflagData.bitlyFlag == "True") ? 2 :1 ;
              let array_length = userExists[0].text_data.match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g).length;
               for (let j = 0; j < array.length; j++) {
-                if(array[j].match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g)){
+                if(array[j].match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,!&\/\/=]+)/g)){
                   let xzhxzh;
                     if(array[j].match(/amazon.in/g)){
                      xzhxzh = array[j].replace(/[[\]]/g,'').replace(/ /g, '@')
                     }else{
                     xzhxzh = array[j]
                     }
-                  let urls = xzhxzh.match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g)
+                  let urls = xzhxzh.match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,!&\/\/=]+)/g)
                       unshort(urls[0]).then(function(unshortenedUrls){ 
                         let unshortenedUrl = unshortenedUrls.unshorten.replace(/&amp;/g,'&');
                       console.log('unshortenedUrlsssssss: ', unshortenedUrl);
