@@ -9,7 +9,6 @@ let request = require("request");
 var config = require('../config/global');
 var connection = require('../config/connection');
 const BitlyClient = require('bitly').BitlyClient;
-const bitly = new BitlyClient('ce5b3cd2f0938117777a556fa0c542f0b2eca085');
 var tall = require('tall').default;
 const Path = require('path') ;
 var http = require('http');
@@ -952,6 +951,8 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
     }
 
     function posttele (bodyss, lastInsertId, lastArrayData) {
+	    
+      const bitly = new BitlyClient('ce5b3cd2f0938117777a556fa0c542f0b2eca085');
       let sqlsss = "SELECT * FROM post_flags";
         connection.query(sqlsss, function (err, flagData) {
           if (err) {
