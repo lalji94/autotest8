@@ -185,7 +185,7 @@ router.post('/bitlyChangePostAmzn', function (req, res) {
       values =  [
                    req.body.org_post_tag
                 ]
-      var sql = "UPDATE post_flags set current_bitly =? WHERE id = 1";
+      var sqlss = "UPDATE post_flags set current_bitly =? WHERE id = 1";
       connection.query(sqlss, values, function (err, rides) {
         if (err) {
           return nextCall({
