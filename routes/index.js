@@ -208,6 +208,8 @@ router.post('/bitlyChangePostAmzn', function (req, res) {
       data: response
     });
   });
+  });
+
 router.get('/telegram_posts', function (req, res, next) {
   async.waterfall([
     function (nextCall) {
