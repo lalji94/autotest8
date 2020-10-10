@@ -1413,7 +1413,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                   let finalAmazon = final.join('\n');
                       let getUrlPost =  finalAmazon.match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g);
                     let finalIdListed = JSON.parse(ListflagData.array_data).user;
-                  let finalPostList = JSON.parse(ListflagData.amzn_tele_value).telenogroup;
+                  let finalPostList = JSON.parse(ListflagData.manual_amzn_tele_value).telenogroup;
                     if(finalAmazon.match(/amzn.to/g)){
                     postImageWidth(getUrlPost[0],ListflagData.bestshopping_token,ListflagData.kudart_token,nextId,finalAmazon,finalPostList);
                     }else{
@@ -1423,9 +1423,9 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                     let finalIdList = JSON.parse(ListflagData.array_data).user;
                     let finalPostList;
                   if(finalAmazon.match(/amzn.to/g)){
-                    finalPostList = JSON.parse(ListflagData.amzn_tele_value).telenogroup;
+                    finalPostList = JSON.parse(ListflagData.manual_amzn_tele_value).telenogroup;
                   }else{
-                    finalPostList = JSON.parse(ListflagData.tele_values).telenogroup;
+                    finalPostList = JSON.parse(ListflagData.manual_tele_values).telenogroup;
                   }
                     console.log('finalPostList: ', finalPostList);
                     console.log('finalPostList: ', finalPostList.length);
@@ -1472,9 +1472,9 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                 let finalIdList = JSON.parse(ListflagData.array_data).user;
                 let finalPostList;
                if(finalAmazon.match(/amzn.to/g)){
-                finalPostList = JSON.parse(ListflagData.amzn_tele_value).telenogroup;
+                finalPostList = JSON.parse(ListflagData.manual_amzn_tele_value).telenogroup;
                }else{
-                finalPostList = JSON.parse(ListflagData.tele_values).telenogroup;
+                finalPostList = JSON.parse(ListflagData.manual_tele_values).telenogroup;
                }
                 console.log('finalPostList: ', finalPostList);
                 console.log('finalPostList: ', finalPostList.length);
