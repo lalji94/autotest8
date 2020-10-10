@@ -1430,8 +1430,9 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                     console.log('finalPostList: ', finalPostList);
                     console.log('finalPostList: ', finalPostList.length);
                     let insertFeild = [rides[0].post_id + i, JSON.stringify(finalAmazon.replace(/[^0-9a-zA-Zㄱ-힣+×÷=%♤♡☆♧)(*&^/~#@!-:;,?`_|<>{}¥£€$◇■□●○•°※¤《》¡¿₩\[\]\"\' \\]/g ,""))]
-                    let sqlss = "INSERT INTO post_telegram1 (post_id,data) VALUES (" + nextId + "," + JSON.stringify(finalAmazon.replace(/[^0-9a-zA-Zㄱ-힣+×÷=%♤♡☆♧)(*&^/~#@!-:;,?`_|<>{}¥£€$◇■□●○•°※¤《》¡¿₩\[\]\"\' \\]/g ,"")) + ")";
-                    connection.query(sqlss, [insertFeild], function (err, rides) {
+//                     let sqlss = "INSERT INTO post_telegram1 (post_id,data) VALUES (" + nextId + "," + JSON.stringify(finalAmazon.replace(/[^0-9a-zA-Zㄱ-힣+×÷=%♤♡☆♧)(*&^/~#@!-:;,?`_|<>{}¥£€$◇■□●○•°※¤《》¡¿₩\[\]\"\' \\]/g ,"")) + ")";
+                   let sqlss = "INSERT INTO post_telegram1 (post_id,data) VALUES (" + nextId + ", 'demo1')";
+			  connection.query(sqlss, [insertFeild], function (err, rides) {
                       if (err) {
                         console.log('err: ', err);
                       }else{
@@ -1479,8 +1480,10 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                 console.log('finalPostList: ', finalPostList);
                 console.log('finalPostList: ', finalPostList.length);
                 let insertFeild = [rides[0].post_id + i, JSON.stringify(finalAmazon.replace(/[^0-9a-zA-Zㄱ-힣+×÷=%♤♡☆♧)(*&^/~#@!-:;,?`_|<>{}¥£€$◇■□●○•°※¤《》¡¿₩\[\]\"\' \\]/g ,""))]
-                let sqlss = "INSERT INTO post_telegram1 (post_id,data) VALUES (" + nextId + "," + JSON.stringify(finalAmazon.replace(/[^0-9a-zA-Zㄱ-힣+×÷=%♤♡☆♧)(*&^/~#@!-:;,?`_|<>{}¥£€$◇■□●○•°※¤《》¡¿₩\[\]\"\' \\]/g ,"")) + ")";
-                connection.query(sqlss, [insertFeild], function (err, rides) {
+//                 let sqlss = "INSERT INTO post_telegram1 (post_id,data) VALUES (" + nextId + "," + JSON.stringify(finalAmazon.replace(/[^0-9a-zA-Zㄱ-힣+×÷=%♤♡☆♧)(*&^/~#@!-:;,?`_|<>{}¥£€$◇■□●○•°※¤《》¡¿₩\[\]\"\' \\]/g ,"")) + ")";
+                   let sqlss = "INSERT INTO post_telegram1 (post_id,data) VALUES (" + nextId + ", 'demo1')";
+               
+		  connection.query(sqlss, [insertFeild], function (err, rides) {
                   if (err) {
                     console.log('err: ', err);
                   }else{
