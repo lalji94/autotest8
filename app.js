@@ -7,19 +7,34 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var expressValidator = require('express-validator');
 var express = require('express');
-
+var cors = require('cors')
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.use(cors());
+app.options('*', cors());
 
+// app.use(function(req, res, next) {
+//   res.header("Access-Control-Allow-Credentials", true);
+//   res.header('Access-Control-Allow-Origin', req.headers.origin);
+//   res.header("Access-Control-Allow-Headers", "Content-Type, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5,  Date, X-Api-Version, X-File-Name, user-access-token");
+//   res.header('Access-Control-Allow-Methods', "POST, GET, PUT, DELETE, OPTIONS");
+//   next();
+// });
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Credentials", true);
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
-  res.header("Access-Control-Allow-Headers", "Content-Type, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5,  Date, X-Api-Version, X-File-Name, user-access-token");
+  res.header('Access-Control-Allow-Origin', "*");
   res.header('Access-Control-Allow-Methods', "POST, GET, PUT, DELETE, OPTIONS");
-  next();
+  res.header("Access-Control-Allow-Headers", "Content-Type, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5,  Date, X-Api-Version, X-File-Name, user-access-token,authorization, authorizations");
+  res.header("Access-Control-Allow-Credentials", true);
+  if(req.method == 'OPTIONS'){        
+  res.header('Access-Control-Allow-Origin', "*");
+  res.header("Access-Control-Allow-Credentials", true);
+      return res.status(200).json({});
+  } else {
+      next();
+  }
 });
 app.use(logger('dev'));
 // app.use(express.json());
@@ -27,7 +42,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(expressValidator());
-app.use(express.urlencoded({ extended: false }));
+// app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
