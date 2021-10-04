@@ -823,8 +823,8 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
             for (let l = 0; l < telegroup.length; l++) {
                 teleAutoPostChannel(finalAmznData,telegroup[l].groupname,amzn_data);
             }
-            teleAutoPostChannel(finalAmznData,"@bestshoppingdl",token);
-            teleAutoPostChannel(finalAmznData,"@bestshoppingdeal00",token);
+//             teleAutoPostChannel(finalAmznData,"@bestshoppingdl",token);
+//             teleAutoPostChannel(finalAmznData,"@bestshoppingdeal00",token);
           }
         }
       })
@@ -838,8 +838,8 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
         for (let l = 0; l < telegroup.length; l++) {
           teleAutoPostChannel(finalAmznData,telegroup[l].groupname,amzn_data);
         }
-        teleAutoPostChannel(finalAmznData,"@bestshoppingdl",token);
-        teleAutoPostChannel(finalAmznData,"@bestshoppingdeal00",token);
+//         teleAutoPostChannel(finalAmznData,"@bestshoppingdl",token);
+//         teleAutoPostChannel(finalAmznData,"@bestshoppingdeal00",token);
       }
     })
       });
