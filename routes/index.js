@@ -1584,6 +1584,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                 if(ListflagData.tele_flag == '0' && ListflagData.watts_flag == '0' ){
                   console.log('---0');
                 }else if(ListflagData.tele_flag == '1' && ListflagData.watts_flag == '1' ){
+			     console.log("------11111111-----");
                   for (let l = 0; l < finalPostList.length; l++) {
                     // if(finalPostList[l].groupflag == '0'){
                       teleAutoPostChannel(finalAmazon,finalPostList[l].groupname,ListflagData.kudart_token);
@@ -1597,6 +1598,8 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                   whatsapp_posts1(finalAmazon, finalIdList[0].apiKey,finalIdList[0].phoneId,finalIdList[0].productId);
                   whatsapp_posts2(finalAmazon, finalIdList[1].apiKey,finalIdList[1].phoneId,finalIdList[1].productId);
                 }else if(ListflagData.tele_flag == '1' && ListflagData.watts_flag == '0' ){
+			     console.log("------22222222-----");
+			
                   for (let l = 0; l < finalPostList.length; l++) {
                     // if(finalPostList[l].groupflag == '0'){
                       teleAutoPostChannel(finalAmazon,finalPostList[l].groupname,ListflagData.kudart_token);
@@ -2103,6 +2106,7 @@ function whatsapp_posts1(AmazonMsg,Amznapi,Amznphoneid,Amznprodid){
       //         ]
       const months = ["🛍 ", "🛒 ", "🔥 ", "💰 ", "🛍️ ", "🤑 ", "🏷️ ", "💳 ", "🎟️ ","📦 ","😍 ","🕯 ","🍂 ","🎌 ","👑 ","🎊 ","🐦 ","⛄ "];
       const randomMonth = months[Math.floor(Math.random() * months.length)];
+			     console.log("------444444444-----");
      
       for (let i = 0; i < arrayGroupNumber.length; i++) {
         var ggff = urlencodedd(AmazonMsg);
@@ -2125,6 +2129,8 @@ function whatsapp_posts1(AmazonMsg,Amznapi,Amznphoneid,Amznprodid){
           headers: requestHeaders1
         }, (err, response, body) => {
           let link = JSON.parse(body);
+			     console.log("------5555555-----");
+		
         })
       }
     }
