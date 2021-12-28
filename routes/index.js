@@ -463,6 +463,28 @@ router.get('/singlepostFlags', function (req, res) {
   });
 });
 
+router.get('/dealconvert', function (req, res) {
+  async.waterfall([
+    function (nextCall) {
+     unshort("https://www.dealshare.in/offer/detail?offer=PC_Ahm10284&ui=4zog2f%26screenName=PRICECHOP%26eventType=TELEGRAM%26dealId=PC_Ahm10284%26L1%3DPriceChop%26L2%3DTELEGRAM").then(function(unshortenedUrls){
+	nextCall(null, unshortenedUrls);
+     }).catch(function(err){ console.error('AAAW 👻', err)})
+    }
+  ], function (err, response) {
+    if (err) {
+      return res.send({
+        status: err.code ? err.code : 400,
+        message: (err && err.msg) || "someyhing went wrong"
+      });
+    }
+    return res.send({
+      status: 200,
+      message: "Single recored sucessfully",
+      data: response
+    });
+  });
+});
+
 router.get('/activepostFlags', function (req, res) {
   async.waterfall([
     function (nextCall) {
