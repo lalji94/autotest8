@@ -2171,31 +2171,35 @@ function urlencodedd(str) {
 //         })
 //       }
 //     }
-	for (let i = 0; i < arrayGroupNumber.length; i++) {
-	  var ggff = urlencodedd(AmazonMsg);
-	  if(ggff != 'null' && ggff != 'undefined' ){
-	  let requestHeaders1 = {
-	    "Content-Type": "application/json",
-	    "accept": "application/json"
-	  }
-	  let linkRequest1;
-	  linkRequest1 = {
-	    "chatId": arrayGroupNumber[i].id,
-	    "body": randomMonth + ggff
-	  }
-	  request({
-	    uri: "https://api.chat-api.com/"+Amznphoneid+"/sendMessage?token="+ Amznprodid,
-	    method: "POST",
-	    body: JSON.stringify(linkRequest1),
-	    headers: requestHeaders1
-	  }, (err, response, body) => {
-		  console.log('sss',body);
-		  console.log('errrr',err);
-	    let link = JSON.parse(body);
-	  })
-	}
-	}
-  }
+for (let i = 0; i < arrayGroupNumber.length; i++) {
+  var ggff = urlencodedd(AmazonMsg);
+  if(ggff != 'null' && ggff != 'undefined' ){
+    let requestHeaders1 = {
+      "Content-Type": "application/json",
+      "accept": "application/json",
+    }
+
+     let linkRequest1 = {
+        "number": arrayGroupNumber[i].id,
+        "message": randomMonth + ggff
+      }
+  // let form = new FormData();
+  // form.append("number", arrayGroupNumber[i].id);
+  // form.append("message", randomMonth + ggff);
+
+  request({
+    uri: "https://wpqrcode1.herokuapp.com/send-message",
+    method: "POST",
+    body: JSON.stringify(linkRequest1),
+    headers: requestHeaders1
+  }, (err, response, body) => {
+    console.log('sss',body);
+    console.log('errrr',err);
+    let link = JSON.parse(body);
+  })
+}
+}
+}
 
 function whatsapp_posts2(AmazonMsg,Amznapi,Amznphoneid,Amznprodid){
     let arrayGroupNumber = [
@@ -2277,28 +2281,35 @@ function whatsapp_posts2(AmazonMsg,Amznapi,Amznphoneid,Amznprodid){
 //         })
 //       }
 //     }
-	for (let i = 0; i < arrayGroupNumber.length; i++) {
-	  var ggff = urlencodedd(AmazonMsg);
-	  if(ggff != 'null' && ggff != 'undefined' ){
-	  let requestHeaders1 = {
-	    "Content-Type": "application/json",
-	    "accept": "application/json"
-	  }
-	  let linkRequest1;
-	  linkRequest1 = {
-	    "chatId": arrayGroupNumber[i].id,
-	    "body": randomMonth + ggff
-	  }
-	  request({
-	    uri: "https://api.chat-api.com/"+Amznphoneid+"/sendMessage?token="+ Amznprodid,
-	    method: "POST",
-	    body: JSON.stringify(linkRequest1),
-	    headers: requestHeaders1
-	  }, (err, response, body) => {
-	    let link = JSON.parse(body);
-	  })
-	}
-	}
+
+  for (let i = 0; i < arrayGroupNumber.length; i++) {
+    var ggff = urlencodedd(AmazonMsg);
+    if(ggff != 'null' && ggff != 'undefined' ){
+      let requestHeaders1 = {
+        "Content-Type": "application/json",
+        "accept": "application/json",
+      }
+  
+       let linkRequest1 = {
+          "number": arrayGroupNumber[i].id,
+          "message": randomMonth + ggff
+        }
+    // let form = new FormData();
+    // form.append("number", arrayGroupNumber[i].id);
+    // form.append("message", randomMonth + ggff);
+  
+    request({
+      uri: "https://wpqrcode2.herokuapp.com/send-message",
+      method: "POST",
+      body: JSON.stringify(linkRequest1),
+      headers: requestHeaders1
+    }, (err, response, body) => {
+      console.log('sss',body);
+      console.log('errrr',err);
+      let link = JSON.parse(body);
+    })
+  }
+  }
   }
 router.get('/allinoneappaaww', function (req, res, next) {
   async.waterfall([
