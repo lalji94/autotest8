@@ -1054,7 +1054,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
               console.log('err: ', err);
             }
             else if (rides[0].cnt == 0) {
-//              posttele (rides[0].cnt, last_insert_id.id, matchObj);
+             posttele (rides[0].cnt, last_insert_id.id, matchObj);
             } else {
               // nextCall(null, bodyss);
             }
@@ -1542,11 +1542,11 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                       let getUrlPost =  finalAmazon.match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g);
                     let finalIdListed = JSON.parse(ListflagData.array_data).user;
                   let finalPostList = JSON.parse(ListflagData.manual_amzn_tele_value).telenogroup;
-                    if(finalAmazon.match(/amzn.to/g)){
-                    postImageWidth(getUrlPost[0],ListflagData.bestshopping_token,ListflagData.kudart_token,nextId,finalAmazon,finalPostList);
-                    }else{
+//                     if(finalAmazon.match(/amzn.to/g)){
+//                     postImageWidth(getUrlPost[0],ListflagData.bestshopping_token,ListflagData.kudart_token,nextId,finalAmazon,finalPostList);
+//                     }else{
               
-                    let finalAmazon = final.join('\n');
+//                     let finalAmazon = final.join('\n');
                   if(finalAmazon.match(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)/g)){
                     let finalIdList = JSON.parse(ListflagData.array_data).user;
                     let finalPostList;
@@ -1591,7 +1591,7 @@ function postImageWidth(post_link,token,amzn_data,storeId,finalAmznData,telegrou
                   }
                 })
                 }
-                    }
+//                     }
            },Math.ceil(array.length/5)*3500);
              
               } else{
